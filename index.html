@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesend | Solusi Transportasi & Logistik Lokal Modern</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS VARIABLES: BRANDING CONTROL --- */
+        :root {
+            --brand-primary: #00AA13;
+            --brand-dark: #00880E;
+            --brand-soft: #E8F5E9;
+            --brand-red: #A50000; /* Warna merah sesuai logo baru */
+            --text-main: #1C1C1C;
+            --text-muted: #666666;
+            --white: #FFFFFF;
+            --bg-body: #F9FAFB;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        img { max-width: 100%; height: auto; }
+
+        /* --- UI COMPONENTS --- */
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; transition: var(--transition); cursor: pointer; border: none; }
+        .btn-primary { background-color: var(--brand-primary); color: var(--white); box-shadow: 0 8px 20px rgba(0, 170, 19, 0.2); }
+        .btn-primary:hover { background-color: var(--brand-dark); transform: translateY(-3px); }
+        
+        .badge { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
+        .badge-open { background: #DCFCE7; color: #166534; }
+        .badge-closed { background: #FEE2E2; color: #991B1B; }
+
+        /* --- 1. NAVBAR --- */
+        nav { height: 90px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        nav .container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        /* Logo Container */
+        .logo-box { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-box img { height: 55px; width: auto; border-radius: 8px; object-fit: cover; }
+        
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 0.95rem; transition: var(--transition); }
+        .nav-links a:hover { color: var(--brand-primary); }
+
+        /* --- 2. HERO --- */
+        .hero { padding: 120px 0; background: radial-gradient(circle at top right, var(--brand-soft), transparent 40%); text-align: center; }
+        .hero-content { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: clamp(2.8rem, 6vw, 4.2rem); font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; }
+        h1 span { color: var(--brand-primary); }
+        .hero p { margin: 24px 0 40px; font-size: 1.25rem; color: var(--text-muted); }
+
+        /* --- 4. KALKULATOR TARIF & MAP --- */
+        .tarif-section { padding: 100px 0; background: var(--white); }
+        .section-header { text-align: center; margin-bottom: 50px; }
+        
+        .calc-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            background: var(--bg-body);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .calc-form { background: var(--white); padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-muted); }
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid #EEE;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-group input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 4px var(--brand-soft); }
+
+        .price-result {
+            margin-top: 25px;
+            padding: 24px;
+            background: var(--brand-soft);
+            color: var(--brand-primary);
+            border-radius: var(--radius-md);
+            text-align: center;
+            display: none;
+            border: 2px dashed var(--brand-primary);
+        }
+        .price-result p { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .price-result h4 { font-size: 2.2rem; font-weight: 800; }
+
+        .map-container { width: 100%; height: 450px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); background: #eee; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        @media (max-width: 992px) {
+            .calc-wrapper { grid-template-columns: 1fr; }
+            .map-container { height: 300px; }
+            .nav-links { display: none; } 
+        }
+
+        /* --- 5. CTA --- */
+        .cta-wa { margin: 100px 0; background: linear-gradient(135deg, var(--brand-primary), var(--brand-dark)); padding: 80px 0; border-radius: 40px; color: var(--white); text-align: center; }
+        footer { padding: 80px 0 40px; background: #111; color: #555; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVBAR -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo-box">
+                <!-- LOGO MESEND (Direct File Link to avoid Invalid Key) -->
+                <img src="https://files.catbox.moe/vzn7is.jpeg" alt="Mesend Logo" onerror="this.src='https://via.placeholder.com/100x100?text=M'">
+                <div style="font-weight: 800; font-size: 1.4rem; color: var(--brand-red); letter-spacing: -1px;">mesend.id</div>
+            </a>
+            <div class="nav-links">
+                <a href="#hero">Beranda</a>
+                <a href="#kalkulator">Cek Tarif</a>
+                <div id="status-badge"></div>
+            </div>
+            <a href="https://wa.me/625117611208" class="btn btn-primary">Pesan Sekarang</a>
+        </div>
+    </nav>
+
+    <!-- 2. HERO -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div id="status-badge-hero" style="margin-bottom: 20px;"></div>
+                <h1>Kirim Apa Saja <span>Secepat</span> Kilat.</h1>
+                <p>Mesend hadir sebagai solusi transportasi lokal terpercaya di Muara Teweh. Aman, transparan, dan ramah di kantong.</p>
+                <div style="display: flex; gap: 16px; justify-content: center;">
+                    <a href="#kalkulator" class="btn btn-primary">Cek Tarif Sekarang</a>
+                    <a href="https://wa.me/625117611208" class="btn" style="background: var(--white); color: var(--text-main); font-weight: 700; border: 1px solid #EEE;">Hubungi Kami</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. KALKULATOR START -->
+    <section class="tarif-section" id="kalkulator">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simulasi Tarif & Rute</h2>
+                <p>Masukkan lokasi tujuan dan jarak perjalanan Anda</p>
+            </div>
+            
+            <div class="calc-wrapper">
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label>Lokasi Tujuan</label>
+                        <input type="text" id="search-location" placeholder="Contoh: Muara Teweh, Barito Utara" oninput="updateMap()">
+                    </div>
+                    <div class="form-group">
+                        <label>Jarak Perjalanan (KM)</label>
+                        <input type="number" id="distanceInput" step="0.1" placeholder="Masukkan jarak (KM)..." oninput="calculatePrice()">
+                    </div>
+                    <p style="font-size: 0.85rem; color: #777; margin-bottom: 10px;">
+                        *Tarif: Rp15.000 (1-2 KM pertama)<br>
+                        *Tambahan: Rp7.500 per KM berikutnya
+                    </p>
+                    
+                    <div id="result-box" class="price-result">
+                        <p>Estimasi Biaya:</p>
+                        <h4 id="total-price">Rp0</h4>
+                        <a id="wa-link" href="#" target="_blank" class="btn btn-primary" style="width: 100%; margin-top: 15px; background: #25D366; border-radius: 12px;">Pesan Sekarang</a>
+                    </div>
+                </div>
+
+                <div class="map-container" id="map-frame">
+                    <iframe id="gmap" src="https://maps.google.com/maps?q=Muara%20Teweh,%20Barito%20Utara&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="cta-wa">
+            <h2>Butuh Layanan Segera?</h2>
+            <p>Pemesanan mudah melalui WhatsApp. Driver kami siap menjemput Anda di seluruh wilayah Barito Utara.</p>
+            <a href="https://wa.me/625117611208" class="btn" style="background: white; color: var(--brand-primary); font-weight: 800;">WhatsApp Kami</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Mesend Indonesia. Seluruh hak cipta dilindungi.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculatePrice() {
+            const distance = parseFloat(document.getElementById('distanceInput').value);
+            const resultBox = document.getElementById('result-box');
+            const priceDisplay = document.getElementById('total-price');
+            const waLink = document.getElementById('wa-link');
+            const location = document.getElementById('search-location').value || "Tujuan";
+
+            if (!isNaN(distance) && distance > 0) {
+                let total = 0;
+                const fixedDistance = Math.ceil(distance); 
+
+                if (fixedDistance <= 2) {
+                    total = 15000; 
+                } else {
+                    total = 15000 + ((fixedDistance - 2) * 7500); 
+                }
+
+                const formattedPrice = total.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0
+                });
+
+                priceDisplay.innerText = formattedPrice;
+                resultBox.style.display = 'block';
+
+                const msg = encodeURIComponent(`Halo Mesend, saya mau pesan ojek.\nTujuan: ${location}\nJarak: ${distance} KM\nEstimasi: ${formattedPrice}`);
+                waLink.href = `https://wa.me/625117611208?text=${msg}`;
+            } else {
+                resultBox.style.display = 'none';
+            }
+        }
+
+        let mapTimeout;
+        function updateMap() {
+            clearTimeout(mapTimeout);
+            mapTimeout = setTimeout(() => {
+                const location = document.getElementById('search-location').value;
+                const mapIframe = document.getElementById('gmap');
+                if (location.length > 2) {
+                    mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                }
+            }, 800);
+        }
+
+        function checkOperational() {
+            const hrs = new Date().getHours();
+            const isOpen = hrs >= 7 && hrs < 22;
+            const badge = isOpen ? '<span class="badge badge-open">● Sedang Buka</span>' : '<span class="badge badge-closed">● Tutup (Buka 07:00)</span>';
+            document.getElementById('status-badge').innerHTML = badge;
+            document.getElementById('status-badge-hero').innerHTML = badge;
+        }
+        checkOperational();
+    </script>
+</body>
+</html>
